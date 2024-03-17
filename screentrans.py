@@ -1,38 +1,40 @@
+#!/usr/bin/python
 import subprocess
-import tkinter as tk
+import sys
+from PyQt5.QtWidgets import QApplication, QMainWindow, QTextEdit
 import pyperclip
-import textshot
 from deep_translator import GoogleTranslator
 
-def translate_text(text_area):
-    # Read text from clipboard
-    text_from_clipboard = pyperclip.paste()
-    print(text_from_clipboard)
+class MainWindow(QMainWindow):
+    def __init__(self):
+        super().__init__()
+        self.setWindowTitle("Text Translation")
+        self.setGeometry(100, 100, 500, 500)
 
-    # Translate text
-    translated_text = GoogleTranslator(source='auto', target='en').translate(text_from_clipboard)
+        # Create text area
+        self.text_area = QTextEdit(self)
+        self.text_area.setReadOnly(True)
+        self.text_area.setGeometry(50, 50, 400, 450)
 
-    # Update text in the text area
-    text_area.delete(1.0, tk.END)
-    text_area.insert(tk.END, f"Original Text:\n{text_from_clipboard}\n\nTranslated Text:\n{translated_text}")
+        # Call translate_text automatically
+        self.translate_text()
 
-# Call the executable program "textshot"
-subprocess.run(["textshot"])
-#textshot.main()
+    def translate_text(self):
+        # Read text from clipboard
+        text_from_clipboard = pyperclip.paste()
 
-# Create the Tkinter window
-window = tk.Tk()
-window.title("Text Translation")
+        # Translate text
+        translated_text = GoogleTranslator(source='auto', target='en').translate(text_from_clipboard)
 
-# Create a text area
-text_area = tk.Text(window, height=10, width=50)
-text_area.pack()
+        # Update text in the text area
+        self.text_area.clear()
+        self.text_area.insertPlainText(f"Original Text:\n{text_from_clipboard}\n\nTranslated Text:\n{translated_text}")
 
-# Button to translate text
-#translate_button = tk.Button(window, text="Translate Text", command=translate_text)
-#translate_button.pack()
-translate_text(text_area)
+if __name__ == "__main__":
+    # Call the executable program "textshot"
+    subprocess.run(["textshot"])
 
-
-# Start the Tkinter event loop
-window.mainloop()
+    app = QApplication(sys.argv)
+    window = MainWindow()
+    window.show()
+    sys.exit(app.exec_())
