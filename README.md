@@ -18,6 +18,11 @@ Execute the following command to run the application:
 ```sh
 python ocrtran.py
 ```
+## Screenshots
+![OCR](images/capture.png)<br>
+
+![Tranlation](images/de_en.png)
+![Tranlation](images/de_cn.png)
 
 Upon running the application, a graphical user interface will appear. You can capture text from the screen and translate it into your desired language.
 
