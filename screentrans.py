@@ -3,8 +3,9 @@ import subprocess
 import sys
 from PyQt5.QtWidgets import QApplication, QMainWindow, QTextEdit, QWidget, QVBoxLayout, QTextBrowser
 import pyperclip
-from deep_translator import GoogleTranslator
+from googletrans import Translator, LANGUAGES
 
+translator = Translator()
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
@@ -26,11 +27,13 @@ class MainWindow(QMainWindow):
         text_from_clipboard = pyperclip.paste()
 
         # Translate text
-        english = GoogleTranslator(source='auto', target='en').translate(text_from_clipboard)
+        english = translator.translate(text_from_clipboard,
+                                          dest='en').text
+        chinese= translator.translate(text_from_clipboard,
+                                          dest='zh-CN').text
         # Update text in the text browser
         self.text_browser.clear()
 
-        chinese= GoogleTranslator(source='auto', target='zh-CN').translate(text_from_clipboard)
         divider='-'*20
         html=f"<b>Original Text</b><br>{text_from_clipboard} <br><br> <b>English</b> <br> {english} <br><br><b> Chinese</b><br>{chinese}"
         self.text_browser.setHtml(html)
