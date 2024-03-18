@@ -19,9 +19,9 @@ Execute the following command to run the application:
 python ocrtran.py
 ```
 ## Screenshots
-<img src="images/ocr.png" alt="OCR" width="50%"><br>
-<img src="images/images/de_en.png" alt="OCR" width="50%"><br>
-<img src="images/images/de_cn.png" alt="OCR" width="50%"><br>
+<img src="images/capture.png" alt="OCR" width="50%"><br>
+<img src="images/de_en.png" alt="OCR" width="50%"><br>
+<img src="images/de_cn.png" alt="OCR" width="50%"><br>
 
 
 Upon running the application, a graphical user interface will appear. You can capture text from the screen and translate it into your desired language.
