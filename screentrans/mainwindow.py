@@ -1,6 +1,6 @@
 
 import sys
-from PyQt5.QtWidgets import QApplication, QMainWindow, QPushButton, QLabel, QVBoxLayout, QWidget, QComboBox, QTextBrowser, QHBoxLayout, QSizePolicy
+from PyQt5.QtWidgets import QApplication, QMainWindow, QPushButton, QLabel, QVBoxLayout, QWidget, QComboBox, QPlainTextEdit, QHBoxLayout, QSizePolicy
 from PyQt5.QtCore import Qt
 from googletrans import Translator, LANGUAGES
 from screentrans.capture import CaptureScreenWindow
@@ -73,15 +73,15 @@ class MainWindow(QMainWindow):
         combo_box_layout.addWidget(self.comboBoxOutput)
         layout.addLayout(combo_box_layout)
 
-        # Row #3: QTextBrowser, can be expanded in both directions
-        self.text_browser_source = QTextBrowser(self)
-        self.text_browser_source.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
+        # Row #3: QPlainTextEdit, can be expanded in both directions
+        self.plain_text_source = QPlainTextEdit(self)
+        self.plain_text_source.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
 
-        self.text_browser_dest = QTextBrowser(self)
-        self.text_browser_dest.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
+        self.plain_text_dest = QPlainTextEdit(self)
+        self.plain_text_dest.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
 
-        layout.addWidget(self.text_browser_source)
-        layout.addWidget(self.text_browser_dest)
+        layout.addWidget(self.plain_text_source)
+        layout.addWidget(self.plain_text_dest)
 
         # Row #4: Two buttons ("Translate" and "Capture")
         button_capture = QPushButton("Selection", self)
@@ -98,6 +98,8 @@ class MainWindow(QMainWindow):
         self.comboBoxOutput.currentIndexChanged.connect(self.translate)
         self.comboBoxInput.currentIndexChanged.connect(self.translate)
 
+        self.plain_text_source.textChanged.connect(self.translate)
+
 
 
 
@@ -112,11 +114,11 @@ class MainWindow(QMainWindow):
 
 
     def update_and_translate(self, text):
-        self.text_browser_source.setPlainText(text)
+        self.plain_text_source.setPlainText(text)
         self.translate()
 
     def translate(self):
-        text = self.text_browser_source.toPlainText()
+        text = self.plain_text_source.toPlainText()
         if not text:
             return
         inputlang = self.comboBoxInput.currentText()
@@ -129,7 +131,7 @@ class MainWindow(QMainWindow):
                                           src=inputlang,
                                           dest=outputlang)
 
-        self.text_browser_dest.setPlainText(translated.text)
+        self.plain_text_dest.setPlainText(translated.text)
     
     
     def capture_text(self):
