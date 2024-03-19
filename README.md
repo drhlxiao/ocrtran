@@ -1,4 +1,4 @@
-# ocrtran  a tool to OCR Screen and translate the text into any languages 
+# ocrtran --  a tool to OCR Screen and translate text into any languages 
 
 This application captures text from the screen using Optical Character Recognition (OCR) and translates it into any language using the Google Translate API.
 
