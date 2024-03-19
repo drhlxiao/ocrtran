@@ -1,15 +1,14 @@
-from PyQt5.QtWidgets import QApplication, QMainWindow, QPushButton, QLabel, QVBoxLayout, QWidget
 
 import sys
+import io
+import pytesseract
+from PIL import Image
 
-from random import randint
+from PyQt5.QtWidgets import QApplication, QMainWindow, QPushButton, QLabel, QVBoxLayout, QWidget
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QApplication, QMainWindow, QWidget, QPushButton, QTextBrowser, QHBoxLayout,QSizePolicy
 from PyQt5.QtCore import Qt, pyqtSignal 
 
-import pytesseract
-from PIL import Image
-import io
 
 
 
@@ -21,12 +20,13 @@ def get_ocr_result(img, lang=None):
     img.save(buffer, "PNG")
     pil_img = Image.open(io.BytesIO(buffer.data()))
     buffer.close()
+    print(lang)
 
     try:
         return pytesseract.image_to_string(pil_img, timeout=5, lang=lang).strip()
     except RuntimeError as error:
-        print('failed to capture the screen')
-        return
+        
+        return 'Failed to ocr the screen'
 
 
 
@@ -36,7 +36,7 @@ class CaptureScreenWindow(QWidget):
     will appear as a free-floating window as we want.
     """
     closed = pyqtSignal(str)
-    def __init__(self):
+    def __init__(self, langs):
         super().__init__()
         flags=Qt.WindowFlags()
         self.setWindowFlags(
@@ -52,7 +52,7 @@ class CaptureScreenWindow(QWidget):
         self.start, self.end = QtCore.QPoint(), QtCore.QPoint()
 
 
-        self.langs = None
+        self.langs = langs
     def get_result(self):
         return self.ocr_result
 

@@ -4,6 +4,7 @@ from PyQt5.QtWidgets import QApplication, QMainWindow, QPushButton, QLabel, QVBo
 from PyQt5.QtCore import Qt
 from googletrans import Translator, LANGUAGES
 from screentrans.capture import CaptureScreenWindow
+from screentrans import lang 
 
 translator = Translator()
 
@@ -136,7 +137,13 @@ class MainWindow(QMainWindow):
     
     def capture_text(self):
         #QtWidgets.QApplication.processEvents()
-        self.w = CaptureScreenWindow()
+        inputlang = self.comboBoxInput.currentText()
+        if inputlang=='Auto detection':
+            language =None
+        else:
+            language =lang.get_tesseract_code(inputlang)
+
+        self.w = CaptureScreenWindow(language)
         self.w.closed.connect(self.update_and_translate)
         self.w.show()
 
