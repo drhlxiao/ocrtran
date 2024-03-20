@@ -56,7 +56,7 @@ class MainWindow(QMainWindow):
         layout.addWidget(self.plain_text_dest)
 
         # Row #4: Two buttons ("Translate" and "Capture")
-        button_capture = QPushButton("Snap Screen", self)
+        button_capture = QPushButton("Capture Screen", self)
 
         layout.addWidget(button_capture)
 
@@ -77,7 +77,7 @@ class MainWindow(QMainWindow):
         self.setStatusBar(self.statusBar)
 
         # Initialize status bar message
-        self.statusBar.showMessage("Click the button [Snap Screen] to start...")
+        self.statusBar.showMessage("Click the button [Capture screen] to start...")
         self.setStyleSheet(stylesheet)
 
 
