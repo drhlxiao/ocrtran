@@ -29,9 +29,9 @@ class MainWindow(QMainWindow):
         layout = QVBoxLayout(central_widget)
 
         # Row #1: Label "Screen Translator"
-        label = QLabel("Screen Translator", self)
-        label.setText("<a href=\"https://github.com/drhlxiao/ocrtran\">Screen OCR Translator</a>");
-        label.setTextInteractionFlags(Qt.TextBrowserInteraction);
+        label = QLabel("Screen OCR Translator", self)
+        #label.setText("<a href=\"https://github.com/drhlxiao/ocrtran\">Screen OCR Translator</a>");
+        #label.setTextInteractionFlags(Qt.TextBrowserInteraction);
         layout.addWidget(label)
 
         # Row #2: Two combo boxes (comboBoxInput and comboBoxOutput)
