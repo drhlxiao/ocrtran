@@ -20,7 +20,7 @@ class MainWindow(QMainWindow):
         super().__init__()
 
         # Set window title
-        self.setWindowTitle("Screen Translator")
+        self.setWindowTitle("Screen OCR Translator")
         self.resize(650, 500)
         self.setWindowFlags(self.windowFlags() | Qt.WindowStaysOnTopHint)
         # Create central widget and layout
@@ -56,7 +56,8 @@ class MainWindow(QMainWindow):
         layout.addWidget(self.plain_text_dest)
 
         # Row #4: Two buttons ("Translate" and "Capture")
-        button_capture = QPushButton("Selection", self)
+        button_capture = QPushButton("Snap Screen", self)
+
         layout.addWidget(button_capture)
 
         # Set the layout to the central widget
@@ -76,7 +77,7 @@ class MainWindow(QMainWindow):
         self.setStatusBar(self.statusBar)
 
         # Initialize status bar message
-        self.statusBar.showMessage("Click the button [selection] to start...")
+        self.statusBar.showMessage("Click the button [Snap Screen] to start...")
         self.setStyleSheet(stylesheet)
 
 
