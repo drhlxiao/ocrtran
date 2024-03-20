@@ -1,6 +1,6 @@
 
 import sys
-from PyQt5.QtWidgets import QApplication, QMainWindow, QPushButton, QLabel, QVBoxLayout, QWidget, QComboBox, QPlainTextEdit, QHBoxLayout, QSizePolicy
+from PyQt5.QtWidgets import QApplication, QMainWindow, QPushButton, QLabel, QVBoxLayout, QWidget, QComboBox, QPlainTextEdit, QHBoxLayout, QSizePolicy, QStatusBar
 from PyQt5.QtCore import Qt
 from googletrans import Translator, LANGUAGES
 from screentrans.capture import CaptureScreenWindow
@@ -9,41 +9,10 @@ from screentrans import lang
 translator = Translator()
 
 stylesheet = """
-#Form {
-    background-color: #f0f0f0;
-}
 
-QLabel {
-    font-size: 1rem;
-}
-
-QPushButton {
-    background-color: #d3d3d3; /* Light grey color */
-    color: white;
-    border: none;
-    padding: .5rem 1rem;
-    text-align: center;
-    text-decoration: none;
-    font-size: 1rem;
-    margin: .25rem .5rem;
-    border-radius: .5rem;
-}
-
-QPushButton:hover {
-    background-color: #bfbfbf; /* Slightly darker grey color on hover */
-}
-
-QPlainTextEdit {
-    background-color: #fff;
-    border: 2px solid #d3d3d3; /* Corresponding border color */
-    border-radius: .5rem;
-}
-
-QComboBox {
-    background-color: #fff;
-    border: 2px solid #d3d3d3; /* Corresponding border color */
-    border-radius: .5rem;
-    padding: .3125rem; /* Corresponds to Bootstrap 5 default padding */
+QStatusBar QLabel {
+    color: #808080; /* Muted text color */
+    font-size:0.7em;
 }
 """
 class MainWindow(QMainWindow):
@@ -52,7 +21,7 @@ class MainWindow(QMainWindow):
 
         # Set window title
         self.setWindowTitle("Screen Translator")
-        self.resize(350, 500)
+        self.resize(650, 500)
         self.setWindowFlags(self.windowFlags() | Qt.WindowStaysOnTopHint)
         # Create central widget and layout
         central_widget = QWidget(self)
@@ -101,7 +70,12 @@ class MainWindow(QMainWindow):
 
         self.plain_text_source.textChanged.connect(self.translate)
 
+        self.statusBar = QStatusBar(self)
+        self.setStatusBar(self.statusBar)
 
+        # Initialize status bar message
+        self.statusBar.showMessage("Click the button 'selection' to start...")
+        self.setStyleSheet(stylesheet)
 
 
 
@@ -115,6 +89,7 @@ class MainWindow(QMainWindow):
 
 
     def update_and_translate(self, text):
+        self.statusBar.showMessage("Translating...")
         self.plain_text_source.setPlainText(text)
         self.translate()
 
@@ -133,10 +108,12 @@ class MainWindow(QMainWindow):
                                           dest=outputlang)
 
         self.plain_text_dest.setPlainText(translated.text)
+        self.statusBar.showMessage("")
     
     
     def capture_text(self):
         #QtWidgets.QApplication.processEvents()
+        self.statusBar.showMessage("Taking screenshot...")
         inputlang = self.comboBoxInput.currentText()
         if inputlang=='Auto detection':
             language =None
