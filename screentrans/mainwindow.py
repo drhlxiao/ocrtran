@@ -30,6 +30,8 @@ class MainWindow(QMainWindow):
 
         # Row #1: Label "Screen Translator"
         label = QLabel("Screen Translator", self)
+        label.setText("<a href=\"https://github.com/drhlxiao/ocrtran\">Screen OCR Translator</a>");
+        label.setTextInteractionFlags(Qt.TextBrowserInteraction);
         layout.addWidget(label)
 
         # Row #2: Two combo boxes (comboBoxInput and comboBoxOutput)
@@ -74,7 +76,7 @@ class MainWindow(QMainWindow):
         self.setStatusBar(self.statusBar)
 
         # Initialize status bar message
-        self.statusBar.showMessage("Click the button 'selection' to start...")
+        self.statusBar.showMessage("Click the button [selection] to start...")
         self.setStyleSheet(stylesheet)
 
 
