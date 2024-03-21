@@ -1,5 +1,6 @@
 
 import sys
+import argparse
 from PyQt5.QtWidgets import QApplication, QMainWindow, QPushButton, QLabel, QVBoxLayout, QWidget, QComboBox, QPlainTextEdit, QHBoxLayout, QSizePolicy, QStatusBar
 from PyQt5.QtCore import Qt
 from googletrans import Translator, LANGUAGES
@@ -16,7 +17,7 @@ QStatusBar QLabel {
 }
 """
 class MainWindow(QMainWindow):
-    def __init__(self):
+    def __init__(self, args):
         super().__init__()
 
         # Set window title
@@ -79,6 +80,8 @@ class MainWindow(QMainWindow):
         # Initialize status bar message
         self.statusBar.showMessage("Click the button [Capture screen] to start...")
         self.setStyleSheet(stylesheet)
+        if args.s:
+            self.capture_text()
 
 
 
@@ -126,10 +129,15 @@ class MainWindow(QMainWindow):
         self.w = CaptureScreenWindow(language)
         self.w.closed.connect(self.update_and_translate)
         self.w.show()
-
+def parse_args():
+    parser = argparse.ArgumentParser(description='OCR translator')
+    # Add your command line arguments here
+    parser.add_argument('--s', help='Take screenshot immediately', action='store_true', default=False)
+    return parser.parse_args()
 def main():
+    args=parse_args()
     app = QApplication(sys.argv)
-    w = MainWindow()
+    w = MainWindow(args)
     w.show()
     app.exec()
 
