@@ -80,6 +80,7 @@ class MainWindow(QMainWindow):
         # Initialize status bar message
         self.statusBar.showMessage("Click the button [Capture screen] to start...")
         self.setStyleSheet(stylesheet)
+        self.args=args
         if args.s:
             self.capture_text()
 
@@ -104,7 +105,13 @@ class MainWindow(QMainWindow):
         if not text:
             return
         inputlang = self.comboBoxInput.currentText()
-        outputlang = self.comboBoxOutput.currentText()
+        if not self.args.lan:
+            outputlang = self.comboBoxOutput.currentText()
+        else:
+            outputlang=self.args.lan
+
+        
+
         if inputlang=='Auto detection':
             translated = translator.translate(text,
                                           dest=outputlang)
@@ -133,6 +140,7 @@ def parse_args():
     parser = argparse.ArgumentParser(description='OCR translator')
     # Add your command line arguments here
     parser.add_argument('--s', help='Take screenshot immediately', action='store_true', default=False)
+    parser.add_argument('-lan', help='Destination languages')
     return parser.parse_args()
 def main():
     args=parse_args()
