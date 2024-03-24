@@ -9,6 +9,7 @@ from ocrtran.capture import CaptureScreenWindow
 from ocrtran import lang 
 from ocrtran import text_edit
 from ocrtran import vocabulary
+from ocrtran.utils import abspath
 
 
 
@@ -63,7 +64,7 @@ class MainWindow(QMainWindow):
 
         # Row #4: Two buttons ("Translate" and "Capture")
         button_capture = QPushButton("Capture Screen", self)
-        icon = QIcon("ocrtran/icons/capture.png")  # Replace "icon.png" with the actual path to your icon file
+        icon = QIcon(abspath("icons/capture.png"))  # Replace "icon.png" with the actual path to your icon file
         button_capture.setIcon(icon)
         layout.addWidget(button_capture)
 

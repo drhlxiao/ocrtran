@@ -2,6 +2,7 @@ from PyQt5.QtCore import Qt, pyqtSignal, QPoint
 from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import QPushButton, QLabel, QVBoxLayout, QWidget,  QPlainTextEdit, QHBoxLayout, QSizePolicy, QMenu, QAction, QMessageBox
 from ocrtran import speech
+from ocrtran.utils import abspath
 
 class FloatingButtonWidget(QPushButton):
 
@@ -42,10 +43,10 @@ class OcrTextEdit(QPlainTextEdit):
         super().__init__(parent)
 
         self.language= 'en'
-        self.bookmark_button = FloatingButtonWidget(self, QIcon('./ocrtran/icons/bookmark.png'))
+        self.bookmark_button = FloatingButtonWidget(self, QIcon(abspath('icons/bookmark.png')))
         self.bookmark_button.clicked.connect(self.save_to_vocabulary)
 
-        self.playsound_button = FloatingButtonWidget(self, QIcon('./ocrtran/icons/speaker.png'), -40,0)
+        self.playsound_button = FloatingButtonWidget(self, QIcon(abspath('icons/speaker.png')), -40,0)
         self.playsound_button.clicked.connect(self.to_speach)
         self.parent=parent
     def set_lang(self, lan):
