@@ -5,7 +5,7 @@ from datetime import datetime
 
 USER_DATA_DIR = QStandardPaths.writableLocation(QStandardPaths.AppDataLocation)
 VOC_PATH=Path(USER_DATA_DIR)/"ocrtran"
-VOC_FILE= VOC_PATH/"vocabulary.txt"
+VOC_FILE= VOC_PATH/"vocabulary.csv"
 
 def save(text, translated_text):
     if not text:
