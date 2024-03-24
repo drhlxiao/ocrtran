@@ -58,10 +58,12 @@ class OcrTextEdit(QPlainTextEdit):
 
 
         selected_text = self.textCursor().selectedText()
+        if not selected_text:
+            selected_text=self.toPlainText()
         if selected_text:
             speech.speak(selected_text, self.language)
         else:
-            self.parent.showStatus('No words selected!')
+            self.parent.showStatus('Empty words!')
             
 
     def resizeEvent(self, event):
