@@ -1,12 +1,15 @@
 
 import sys
 import argparse
-from PyQt5.QtWidgets import QApplication, QMainWindow, QPushButton, QLabel, QVBoxLayout, QWidget, QComboBox, QPlainTextEdit, QHBoxLayout, QSizePolicy, QStatusBar, QMessageBox, QToolTip
+from PyQt5.QtWidgets import QApplication, QMainWindow, QPushButton, QLabel, QVBoxLayout, QWidget, QComboBox, QPlainTextEdit, QHBoxLayout, QSizePolicy, QStatusBar, QMessageBox, QToolTip, QFileDialog, QAction
 from PyQt5.QtCore import Qt
+from PyQt5.QtGui import QIcon
 from googletrans import Translator, LANGUAGES
 from ocrtran.capture import CaptureScreenWindow
 from ocrtran import lang 
 from ocrtran import text_edit
+from ocrtran import vocabulary
+
 
 
 translator = Translator()
@@ -18,6 +21,10 @@ QStatusBar QLabel {
     font-size:0.7em;
 }
 """
+
+
+
+
 class MainWindow(QMainWindow):
     def __init__(self, args):
         super().__init__()
@@ -31,11 +38,6 @@ class MainWindow(QMainWindow):
         self.setCentralWidget(central_widget)
         layout = QVBoxLayout(central_widget)
 
-        # Row #1: Label "Screen Translator"
-        label = QLabel("Screen OCR Translator", self)
-        #label.setText("<a href=\"https://github.com/drhlxiao/ocrtran\">Screen OCR Translator</a>");
-        #label.setTextInteractionFlags(Qt.TextBrowserInteraction);
-        layout.addWidget(label)
 
         # Row #2: Two combo boxes (comboBoxInput and comboBoxOutput)
 
@@ -61,34 +63,95 @@ class MainWindow(QMainWindow):
 
         # Row #4: Two buttons ("Translate" and "Capture")
         button_capture = QPushButton("Capture Screen", self)
-
+        icon = QIcon("ocrtran/icons/capture.png")  # Replace "icon.png" with the actual path to your icon file
+        button_capture.setIcon(icon)
         layout.addWidget(button_capture)
 
         # Set the layout to the central widget
+        self.statusBar = QStatusBar(self)
+        self.setStatusBar(self.statusBar)
+        # Initialize status bar message
+        self.statusBar.showMessage("Click the button [Capture screen] to start...")
         central_widget.setLayout(layout)
+
+        # create menu bar
+        menubar = self.menuBar()
+        # File menu
+        file_menu = menubar.addMenu("&File")
+        open_file_action=file_menu.addAction("&Open")
+        save_file_action=file_menu.addAction("&Save")
+        file_menu.addSeparator()
+        file_menu.addAction("Exit", self.close)
+
+        # Tools menu
+        tools_menu = menubar.addMenu("&Tools")
+        open_vocabulary_action= QAction(QIcon('./ocrtran/icons/vocabulary.png'), "Open my vocabulary", self)
+        tools_menu.addAction(open_vocabulary_action)
+
+
+        # Help menu
+        help_menu = menubar.addMenu("&Help")
+        about_action=help_menu.addAction("&About")
+
 
         self.AddLanguages()
 
         # Connect button signals to slots (optional)
-        #button_translate.clicked.connect(self.translate_text)
         button_capture.clicked.connect(self.capture_text)
         self.comboBoxOutput.currentIndexChanged.connect(self.translate)
         self.comboBoxInput.currentIndexChanged.connect(self.translate)
 
         self.source_textEdit.textChanged.connect(self.translate)
         self.source_textEdit.textSelectionReady.connect(self.translate_selected_text)
+        self.source_textEdit.saveToVocabularyTriggered.connect(self.save_to_vocabulary)
 
-        self.statusBar = QStatusBar(self)
-        self.setStatusBar(self.statusBar)
+        about_action.triggered.connect(self.showAboutMessageBox)
+        open_vocabulary_action.triggered.connect(self.open_vocabulary)
 
-        # Initialize status bar message
-        self.statusBar.showMessage("Click the button [Capture screen] to start...")
+        open_file_action.triggered.connect(self.open_file)
+        save_file_action.triggered.connect(self.save_file)
+
+
         self.setStyleSheet(stylesheet)
+
         self.args=args
         self.translate_text=''
         if args.s:
             self.capture_text()
 
+
+    def save_to_vocabulary(self, text):
+        try:
+            translated_text=self.get_translation(text)
+        except Exception:
+            translated_text=' '
+        filename=vocabulary.save(text, translated_text)
+        self.statusBar.showMessage(f"Saved to vocabulary: {filename} !")
+
+
+    def showAboutMessageBox(self):
+        QMessageBox.about(self, "About", "OCR Screen Translator v1.0 <br> Author: hualin.xiao@outlook.com <br> Github: https://github.com/drhlxiao/ocrtran")
+
+    def open_vocabulary(self):
+        stat, msg=vocabulary.open()
+        
+        if stat:
+            self.statusBar.showMessage(msg)
+        else:
+            QMessageBox.warning(self, 'Warning',msg, 
+                                       QMessageBox.Ok | QMessageBox.Cancel)
+
+    def open_file(self):
+        filename, _ = QFileDialog.getOpenFileName(self, "Open File")
+        if filename:
+            with open(filename, 'r') as file:
+                self.source_textEdit.setPlainText(file.read())
+
+    def save_file(self):
+        filename, _ = QFileDialog.getSaveFileName(self, "Save File")
+        if filename:
+            with open(filename, 'w') as file:
+                file.write(self.source_textEdit.toPlainText())
 
     def AddLanguages(self):
         self.comboBoxInput.addItem('Auto detection')
