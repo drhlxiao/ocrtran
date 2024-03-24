@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=Screen Translator
+Comment=OCR Screen translator
+Exec=/usr/bin/ocrtran
+Icon=/usr/share/icons/breeze-dark/apps/48/crow-translate.svg
+Terminal=false
+Type=Application
+Categories=Utility;
+X-Desktop-File-Install-Version=0.26

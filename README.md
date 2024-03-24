@@ -16,7 +16,7 @@ pip install -r requirements.txt
 ### Run
 Execute the following command to run the application:
 ```sh
-python ocrtran.py
+python ocrtran_qt.py
 ```
 ## Screenshots
 <img src="images/capture.png" alt="OCR" width="50%"><br>

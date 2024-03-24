@@ -1,5 +1,5 @@
 #!/usr/bin/python
 
 
-from screentrans import mainwindow
+from ocrtran import mainwindow
 mainwindow.main()
