@@ -108,6 +108,9 @@ google_to_tesseract_lowercase = {
     "zulu": "zul"
 }
 
+
+
+
 def get_tesseract_code(lang):
     return google_to_tesseract_lowercase.get(lang.lower(),None)
 

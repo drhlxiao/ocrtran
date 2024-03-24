@@ -55,7 +55,7 @@ class MainWindow(QMainWindow):
         self.source_textEdit = text_edit.OcrTextEdit(self)
         self.source_textEdit.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
 
-        self.translated_textEdit = QPlainTextEdit(self)
+        self.translated_textEdit = text_edit.OcrTextEdit(self)
         self.translated_textEdit.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
 
         layout.addWidget(self.source_textEdit)
@@ -119,21 +119,25 @@ class MainWindow(QMainWindow):
         if args.s:
             self.capture_text()
 
+    def showStatus(self,msg):
+        self.statusBar.showMessage(msg)
+
+
 
     def save_to_vocabulary(self, text):
         try:
             translated_text=self.get_translation(text)
         except Exception:
             translated_text=' '
-        filename=vocabulary.save(text, translated_text)
-        self.statusBar.showMessage(f"Saved to vocabulary: {filename} !")
+        msg=vocabulary.save(text, translated_text)
+        self.statusBar.showMessage(msg)
 
 
     def showAboutMessageBox(self):
         QMessageBox.about(self, "About", "OCR Screen Translator v1.0 <br> Author: hualin.xiao@outlook.com <br> Github: https://github.com/drhlxiao/ocrtran")
 
     def open_vocabulary(self):
-        stat, msg=vocabulary.open()
+        stat, msg=vocabulary.open_vocabulary()
         
         if stat:
             self.statusBar.showMessage(msg)
@@ -177,16 +181,32 @@ class MainWindow(QMainWindow):
             tooltip = f"<b>{new_translated_text}</b>"
             QToolTip.showText(pos, tooltip, self)
 
-    def get_translation(self, text):
-        if not text:
-            return ''
+    def set_textEdit_lang(self):
+        in_lan,out_lan=self.get_current_lang()
+        self.source_textEdit.set_lang(in_lan)
+        self.translated_textEdit.set_lang(out_lan)
+
+
+    def get_current_lang(self):
         inputlang = self.comboBoxInput.currentText()
+        if inputlang=='Auto detection':
+            inputlang=None
+
         if not self.args.lan:
             outputlang = self.comboBoxOutput.currentText()
         else:
             outputlang=self.args.lan
 
-        if inputlang=='Auto detection':
+        return inputlang, outputlang
+
+
+
+    def get_translation(self, text):
+        if not text:
+            return ''
+        inputlang, outputlang=self.get_current_lang()
+
+        if not inputlang:
             translated = translator.translate(text,
                                           dest=outputlang)
         else:
