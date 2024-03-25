@@ -58,8 +58,11 @@ class CaptureScreenWindow(QWidget):
         return self._screen.grabWindow(0)
 
     def keyPressEvent(self, event):
+        print("key pressed")
         if event.key() == Qt.Key_Escape:
-            QtWidgets.QApplication.quit()
+            #QtWidgets.QApplication.quit()
+            print("esc pressed")
+            self.close()
 
         return super().keyPressEvent(event)
 

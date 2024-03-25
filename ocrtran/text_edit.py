@@ -53,6 +53,7 @@ class OcrTextEdit(QPlainTextEdit):
         self.language=lan
 
     def to_speach(self):
+        self.playsound_button.setEnabled(False)
         self.parent.set_textEdit_lang()
         #set the lang
 
@@ -64,6 +65,7 @@ class OcrTextEdit(QPlainTextEdit):
             speech.speak(selected_text, self.language)
         else:
             self.parent.showStatus('Empty words!')
+        self.playsound_button.setEnabled(True)
             
 
     def resizeEvent(self, event):
@@ -73,7 +75,7 @@ class OcrTextEdit(QPlainTextEdit):
 
     def contextMenuEvent(self, event):
         menu = self.createStandardContextMenu()
-        save_action = QAction(QIcon('./ocrtran/icons/bookmark.png'), "Save to my vocabulary", self)
+        save_action = QAction(QIcon('icons/bookmark.png'), "Save to my vocabulary", self)
         save_action.triggered.connect(self.save_to_vocabulary)
         menu.addAction(save_action)
         menu.exec_(event.globalPos())

@@ -10,6 +10,5 @@ def get_current_path():
 
 def abspath(p):
     s=os.path.join(get_current_path(), p)
-    print(s)
 
     return s
