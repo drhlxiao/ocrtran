@@ -124,7 +124,6 @@ class MainWindow(QMainWindow):
         self.statusBar.showMessage(msg)
 
 
-
     def save_to_vocabulary(self, text):
         try:
             translated_text=self.get_translation(text)

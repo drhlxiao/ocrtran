@@ -48,7 +48,7 @@ class CaptureScreenWindow(QWidget):
         QtWidgets.QApplication.setOverrideCursor(QtGui.QCursor(QtCore.Qt.CrossCursor))
 
         self.start, self.end = QtCore.QPoint(), QtCore.QPoint()
-
+        self.setFocusPolicy(Qt.StrongFocus)
 
         self.langs = langs
     def get_result(self):
@@ -58,13 +58,10 @@ class CaptureScreenWindow(QWidget):
         return self._screen.grabWindow(0)
 
     def keyPressEvent(self, event):
-        print("key pressed")
         if event.key() == Qt.Key_Escape:
-            #QtWidgets.QApplication.quit()
-            print("esc pressed")
-            self.close()
-
-        return super().keyPressEvent(event)
+            self._close()
+        else:
+            return super().keyPressEvent(event)
 
     def paintEvent(self, event):
         painter = QtGui.QPainter(self)
@@ -81,6 +78,9 @@ class CaptureScreenWindow(QWidget):
         return super().paintEvent(event)
 
     def mousePressEvent(self, event):
+        if event.button() == Qt.RightButton:
+            self._close()
+            return 
         self.start = self.end = event.pos()
         self.update()
         return super().mousePressEvent(event)
@@ -117,6 +117,12 @@ class CaptureScreenWindow(QWidget):
         except Exception as e:
             self.error.emit(str(e))
             return ''
+    def _close(self):
+        QtWidgets.QApplication.restoreOverrideCursor()
+        QtWidgets.QApplication.processEvents()
+        self.parent.showStatus('')
+        self.close()
+
 
 
     def mouseReleaseEvent(self, event):
@@ -125,7 +131,7 @@ class CaptureScreenWindow(QWidget):
 
         ocr_result = self.snipOcr()
         self.closed.emit(ocr_result)
-        self.close()
+        self._close()
 
 
 
