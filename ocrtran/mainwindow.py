@@ -2,7 +2,7 @@
 import sys
 import argparse
 from PyQt5.QtWidgets import QApplication, QMainWindow, QPushButton, QLabel, QVBoxLayout, QWidget, QComboBox, QPlainTextEdit, QHBoxLayout, QSizePolicy, QStatusBar, QMessageBox, QToolTip, QFileDialog, QAction
-from PyQt5.QtCore import Qt
+from PyQt5.QtCore import Qt, pyqtSignal, QThread
 from PyQt5.QtGui import QIcon
 from googletrans import Translator, LANGUAGES
 from ocrtran.capture import CaptureScreenWindow
@@ -22,8 +22,6 @@ QStatusBar QLabel {
     font-size:0.7em;
 }
 """
-
-
 
 
 class MainWindow(QMainWindow):
@@ -238,7 +236,7 @@ class MainWindow(QMainWindow):
         else:
             language =lang.get_tesseract_code(inputlang)
 
-        self.w = CaptureScreenWindow(language)
+        self.w = CaptureScreenWindow(self,language)
         self.w.closed.connect(self.update_and_translate)
         self.w.error.connect(self.ocr_error_handler)
 

@@ -34,7 +34,7 @@ class CaptureScreenWindow(QWidget):
     """
     closed = pyqtSignal(str)
     error = pyqtSignal(str)
-    def __init__(self, langs):
+    def __init__(self,parent, langs):
         super().__init__()
         flags=Qt.WindowFlags()
         self.setWindowFlags(
@@ -46,6 +46,7 @@ class CaptureScreenWindow(QWidget):
         palette.setBrush(self.backgroundRole(), QtGui.QBrush(self.getWindow()))
         self.setPalette(palette)
         QtWidgets.QApplication.setOverrideCursor(QtGui.QCursor(QtCore.Qt.CrossCursor))
+        self.parent=parent
 
         self.start, self.end = QtCore.QPoint(), QtCore.QPoint()
         self.setFocusPolicy(Qt.StrongFocus)

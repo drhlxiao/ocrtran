@@ -1,8 +1,20 @@
-from PyQt5.QtCore import Qt, pyqtSignal, QPoint
+from PyQt5.QtCore import Qt, pyqtSignal, QPoint, QThread
 from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import QPushButton, QLabel, QVBoxLayout, QWidget,  QPlainTextEdit, QHBoxLayout, QSizePolicy, QMenu, QAction, QMessageBox
 from ocrtran import speech
 from ocrtran.utils import abspath
+from functools import partial
+class TTSThread(QThread):
+    finished = pyqtSignal()
+
+    def __init__(self, parent, text, inputlang=None):
+        super().__init__(parent)
+        self.inputlang = inputlang
+        self.text = text
+
+    def run(self):
+        speech.speak(self.text, self.inputlang)
+        self.finished.emit()
 
 class FloatingButtonWidget(QPushButton):
 
@@ -49,6 +61,7 @@ class OcrTextEdit(QPlainTextEdit):
         self.playsound_button = FloatingButtonWidget(self, QIcon(abspath('icons/speaker.png')), -40,0)
         self.playsound_button.clicked.connect(self.to_speach)
         self.parent=parent
+        self.worker_thread=None
     def set_lang(self, lan):
         self.language=lan
 
@@ -57,12 +70,21 @@ class OcrTextEdit(QPlainTextEdit):
         self.parent.set_textEdit_lang()
         #set the lang
 
+        def enable_play_button():
+            self.playsound_button.setEnabled(True)
+
+        if self.worker_thread:
+            self.worker_thread.quit()
 
         selected_text = self.textCursor().selectedText()
         if not selected_text:
             selected_text=self.toPlainText()
         if selected_text:
-            speech.speak(selected_text, self.language)
+            #speech.speak(selected_text, self.language)
+            self.playsound_button.setEnabled(False)
+            self.worker_thread = TTSThread(self, selected_text,  self.language)
+            self.worker_thread.finished.connect(enable_play_button)
+            self.worker_thread.start()
         else:
             self.parent.showStatus('Empty words!')
         self.playsound_button.setEnabled(True)
