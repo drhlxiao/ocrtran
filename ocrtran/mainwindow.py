@@ -51,11 +51,11 @@ class MainWindow(QMainWindow):
         # Row #3: QPlainTextEdit, can be expanded in both directions
         self.source_textEdit = text_edit.OcrTextEdit(self)
         self.source_textEdit.setSizePolicy(
-            QSizePolicy.Expanding, QSizePolicy.Expanding)
+                QSizePolicy.Expanding, QSizePolicy.Expanding)
 
         self.translated_textEdit = text_edit.OcrTextEdit(self)
         self.translated_textEdit.setSizePolicy(
-            QSizePolicy.Expanding, QSizePolicy.Expanding)
+                QSizePolicy.Expanding, QSizePolicy.Expanding)
 
         layout.addWidget(self.source_textEdit)
         layout.addWidget(self.translated_textEdit)
@@ -72,7 +72,7 @@ class MainWindow(QMainWindow):
         self.setStatusBar(self.statusBar)
         # Initialize status bar message
         self.statusBar.showMessage(
-            "Click the button [Capture screen] to start...")
+                "Click the button [Capture screen] to start...")
         central_widget.setLayout(layout)
 
         # create menu bar
@@ -87,7 +87,7 @@ class MainWindow(QMainWindow):
         # Tools menu
         tools_menu = menubar.addMenu("&Tools")
         open_vocabulary_action = QAction(
-            QIcon('./ocrtran/icons/vocabulary.png'), "Open my vocabulary", self)
+                QIcon('./ocrtran/icons/vocabulary.png'), "Open my vocabulary", self)
         tools_menu.addAction(open_vocabulary_action)
 
         # Help menu
@@ -103,9 +103,9 @@ class MainWindow(QMainWindow):
 
         self.source_textEdit.textChanged.connect(self.text_updated_translate)
         self.source_textEdit.textSelectionReady.connect(
-            self.translate_selected_text)
+                self.translate_selected_text)
         self.source_textEdit.saveToVocabularyTriggered.connect(
-            self.save_to_vocabulary)
+                self.save_to_vocabulary)
 
         about_action.triggered.connect(self.show_about)
         open_vocabulary_action.triggered.connect(self.open_vocabulary)
@@ -140,7 +140,7 @@ class MainWindow(QMainWindow):
 
     def show_about(self):
         QMessageBox.about(
-            self, "About", "OCR Screen Translator v1.0 <br> Author: hualin.xiao@outlook.com <br> Github: https://github.com/drhlxiao/ocrtran")
+                self, "About", "OCR Screen Translator v1.0 <br> Author: hualin.xiao@outlook.com <br> Github: https://github.com/drhlxiao/ocrtran")
 
     def open_vocabulary(self):
         stat, msg = vocabulary.open_vocabulary()
@@ -149,7 +149,7 @@ class MainWindow(QMainWindow):
             self.statusBar.showMessage(msg)
         else:
             QMessageBox.warning(self, 'Warning', msg,
-                                QMessageBox.Ok | QMessageBox.Cancel)
+                    QMessageBox.Ok | QMessageBox.Cancel)
 
     def open_file(self):
         filename, _ = QFileDialog.getOpenFileName(self, "Open File")
@@ -166,7 +166,7 @@ class MainWindow(QMainWindow):
     def add_languages(self):
         self.comboBoxInput.addItem('Auto detection')
         langs = ['English'] + [i.capitalize()
-                               for i in LANGUAGES.values() if i != 'english']
+                for i in LANGUAGES.values() if i != 'english']
 
         for i in langs:
             self.comboBoxInput.addItem(i)
@@ -196,7 +196,6 @@ class MainWindow(QMainWindow):
         inputlang = self.comboBoxInput.currentText()
         if inputlang == 'Auto detection':
             inputlang = None
-
         if not self.args.lan:
             outputlang = self.comboBoxOutput.currentText()
         else:
@@ -211,11 +210,17 @@ class MainWindow(QMainWindow):
 
         if not inputlang:
             translated = translator.translate(text,
-                                              dest=outputlang)
+                    dest=outputlang)
         else:
             translated = translator.translate(text,
-                                              src=inputlang,
-                                              dest=outputlang)
+                    src=inputlang,
+                    dest=outputlang)
+
+        src_lang=LANGUAGES.get(translated.src, 'Auto detection')
+        index=self.comboBoxInput.findText(src_lang.capitalize())
+        if index>=0:
+            self.comboBoxInput.setCurrentIndex(index)
+            #correct 
         return translated.text
 
     def translate(self):
@@ -226,9 +231,9 @@ class MainWindow(QMainWindow):
         self.translated_textEdit.setPlainText(_tranlated_text)
         self.statusBar.showMessage("")
 
-    def ocr_error_handler(self, msg):
+    def on_error(self, msg):
         QMessageBox.warning(self, 'Warning', msg,
-                            QMessageBox.Ok | QMessageBox.Cancel)
+                QMessageBox.Ok | QMessageBox.Cancel)
 
     def capture_text(self):
         # QtWidgets.QApplication.processEvents()
@@ -242,9 +247,10 @@ class MainWindow(QMainWindow):
 
         self.w = CaptureScreenWindow(self, language)
         self.w.closed.connect(self.update_and_translate)
-        self.w.error.connect(self.ocr_error_handler)
+        self.w.error.connect(self.on_error)
 
         self.w.show()
+
 
 
 def parse_args():
@@ -257,13 +263,15 @@ def parse_args():
     parser = argparse.ArgumentParser(description='OCR translator')
     # Add your command line arguments here
     parser.add_argument('--s', help='Take screenshot immediately',
-                        action='store_true', default=False)
+            action='store_true', default=False)
     parser.add_argument('-lan', help='Destination languages')
     return parser.parse_args()
 
 
+
 def main():
     args = parse_args()
+    
     app = QApplication(sys.argv)
     w = MainWindow(args)
     w.show()

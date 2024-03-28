@@ -121,7 +121,7 @@ class CaptureScreenWindow(QWidget):
     def _close(self):
         QtWidgets.QApplication.restoreOverrideCursor()
         QtWidgets.QApplication.processEvents()
-        self.parent.showStatus('')
+        self.parent.show_status('')
         self.close()
 
 

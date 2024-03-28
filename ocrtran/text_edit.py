@@ -6,6 +6,7 @@ from ocrtran.utils import abspath
 from functools import partial
 class TTSThread(QThread):
     finished = pyqtSignal()
+    error = pyqtSignal(str)
 
     def __init__(self, parent, text, inputlang=None):
         super().__init__(parent)
@@ -13,7 +14,10 @@ class TTSThread(QThread):
         self.text = text
 
     def run(self):
-        speech.speak(self.text, self.inputlang)
+        try:
+            speech.speak(self.text, self.inputlang)
+        except ValueError as e:
+            self.error.emit(str(e))
         self.finished.emit()
 
 class FloatingButtonWidget(QPushButton):
@@ -84,6 +88,7 @@ class OcrTextEdit(QPlainTextEdit):
             self.playsound_button.setEnabled(False)
             self.worker_thread = TTSThread(self, selected_text,  self.language)
             self.worker_thread.finished.connect(enable_play_button)
+            self.worker_thread.error.connect(self.parent.on_error)
             self.worker_thread.start()
         else:
             self.parent.showStatus('Empty words!')
