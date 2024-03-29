@@ -13,7 +13,7 @@ def save(text, translated_text):
     #Create the directory if it doesn't exist
     VOC_PATH.mkdir(parents=True, exist_ok=True)    # Append text to the file
     timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    text_with_timestamp = f"{timestamp}, {text}, {translated_text}\n"
+    text_with_timestamp = f'{timestamp}, "{text}", "{translated_text}"\n'
     # Append text to the file
     with open(VOC_FILE, "a") as file:
         file.write(text_with_timestamp)
