@@ -135,7 +135,8 @@ class MainWindow(QMainWindow):
             translated_text = self.get_translation(text)
         except Exception:
             translated_text = ' '
-        msg = vocabulary.save(text, translated_text)
+        inlan, outlan=self.get_current_lang()
+        msg = vocabulary.save(inlan, text, outlan, translated_text)
         self.statusBar.showMessage(msg)
 
     def show_about(self):
