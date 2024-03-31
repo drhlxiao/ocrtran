@@ -15,9 +15,9 @@ def save(inlan, text, outlan,  translated_text):
     timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     data = {
         "timestamp": timestamp,
-        "text": text,
+        "source": text,
         'source_lang':inlan,
-        "translated_text": translated_text
+        "translation": translated_text,
         'out_lang':outlan
     }
     # Append text to the file
