@@ -1,7 +1,8 @@
-from PyQt5.QtCore import QStandardPaths
-from pathlib import Path
+import json
 import platform
 from datetime import datetime
+from pathlib import Path
+from PyQt5.QtCore import QStandardPaths
 
 USER_DATA_DIR = QStandardPaths.writableLocation(QStandardPaths.AppDataLocation)
 VOC_PATH=Path(USER_DATA_DIR)/"ocrtran"
