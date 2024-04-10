@@ -3,6 +3,7 @@ import platform
 from datetime import datetime
 from pathlib import Path
 from PyQt5.QtCore import QStandardPaths
+from ocrtran import jsonl_viewer 
 
 USER_DATA_DIR = QStandardPaths.writableLocation(QStandardPaths.AppDataLocation)
 VOC_PATH=Path(USER_DATA_DIR)/"ocrtran"
@@ -26,15 +27,12 @@ def save(inlan, text, outlan,  translated_text):
         json.dump(data, file)
         file.write('\n')
     return f"Saved to vocabulary: {VOC_FILE} !"
+
 def open_vocabulary():
     filename = VOC_FILE
     if not filename.exists():
         return False, f'{filename} does not exist!'
-
-    if platform.system() == 'Windows':
-        os.startfile(filename)
-    else:
-        import subprocess
-        subprocess.Popen(["xdg-open", filename])
+    jsonl_viewer.view(filename)
 
     return True, f'{filename} opened using system default app!'
+

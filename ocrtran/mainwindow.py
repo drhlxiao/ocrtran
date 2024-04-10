@@ -1,4 +1,3 @@
-
 import sys
 import argparse
 from PyQt5.QtWidgets import QApplication, QMainWindow, QPushButton, QLabel, QVBoxLayout, QWidget, QComboBox, QPlainTextEdit, QHBoxLayout, QSizePolicy, QStatusBar, QMessageBox, QToolTip, QFileDialog, QAction
@@ -86,9 +85,15 @@ class MainWindow(QMainWindow):
 
         # Tools menu
         tools_menu = menubar.addMenu("&Tools")
+
         open_vocabulary_action = QAction(
-                QIcon('./ocrtran/icons/vocabulary.png'), "Open my vocabulary", self)
+                QIcon(abspath('icons/vocabulary.png')), "Open Vocabulary", self)
+        toggle_review_vocabulary_action= QAction(
+                QIcon(abspath('icons/review.png')), "Review Vocabulary", self)
+
+
         tools_menu.addAction(open_vocabulary_action)
+        tools_menu.addAction(toggle_review_vocabulary_action)
 
         # Help menu
         help_menu = menubar.addMenu("&Help")
@@ -109,6 +114,7 @@ class MainWindow(QMainWindow):
 
         about_action.triggered.connect(self.show_about)
         open_vocabulary_action.triggered.connect(self.open_vocabulary)
+        toggle_review_vocabulary_action.triggered.connect(self.toggle_review_vocabulary)
 
         open_file_action.triggered.connect(self.open_file)
         save_file_action.triggered.connect(self.save_file)
@@ -123,6 +129,10 @@ class MainWindow(QMainWindow):
         self.source_text_changed_timer = QTimer(self)
         self.source_text_changed_timer.setSingleShot(True)
         self.source_text_changed_timer.timeout.connect(self.translate)
+        self.review_vocabulary_enabled = False
+
+
+
 
     def show_status(self, msg):
         self.statusBar.showMessage(msg)
@@ -251,6 +261,9 @@ class MainWindow(QMainWindow):
         self.w.error.connect(self.on_error)
 
         self.w.show()
+    def toggle_review_vocabulary(self):
+        pass
+
 
 
 
