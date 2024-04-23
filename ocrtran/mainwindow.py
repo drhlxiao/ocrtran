@@ -27,6 +27,7 @@ class MainWindow(QMainWindow):
         super().__init__()
 
         # Set window title
+        self.setWindowIcon(QIcon(abspath("icons/ocrtran.jpg")))
         self.setWindowTitle("Screen OCR Translator")
         self.resize(650, 500)
         self.setWindowFlags(self.windowFlags() | Qt.WindowStaysOnTopHint)
@@ -285,6 +286,7 @@ def parse_args():
 
 def main():
     args = parse_args()
+
     
     app = QApplication(sys.argv)
     w = MainWindow(args)
