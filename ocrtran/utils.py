@@ -9,6 +9,8 @@ def get_current_path():
     return os.path.dirname(__file__)
 
 def abspath(p):
+
     s=os.path.join(get_current_path(), p)
+    print("path:", s)
 
     return s

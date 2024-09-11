@@ -238,7 +238,11 @@ class MainWindow(QMainWindow):
     def translate(self):
         text = self.source_textEdit.toPlainText()
 
-        _tranlated_text = self.get_translation(text)
+        try:
+            _tranlated_text = self.get_translation(text)
+        except AttributeError as e:
+            self.statusBar.showMessage(str(e))
+            return
 
         self.translated_textEdit.setPlainText(_tranlated_text)
         self.statusBar.showMessage("")
